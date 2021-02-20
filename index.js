@@ -1,28 +1,23 @@
 const express = require('express');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20');
+const mongoose =  require('mongoose');
 const keys = require('./config/keys');
+
+require('./services/passport');
+
+//mongoose.connect('mongodb+srv://hai:Monopola022!@realmcluster.pbc0n.mongodb.net/feedback-dev?retryWrites=true&w=majority', { useNewUrlParser: true });
+
+const MongoClient = require('mongodb').MongoClient;
+const uri = keys.mongoURI;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+});
 
 const app = express();
 
-passport.use(
-    new GoogleStrategy({
-        clientID: keys.googleClientID,
-        clientSecret: keys.googleClientSecret,
-        callbackURL: '/auth/google/callback'
-    },
-    (accessToken, refreshToken, profile, done) => {
-        console.log(accessToken)
-        console.log(profile)
-    }
-)
-);
-
-app.get('/auth/google', passport.authenticate('google', {
-    scope: ['profile', 'email']
-}));
-
-app.get('/auth/google/callback', passport.authenticate('google'));
+require('./routes/authRoutes') (app); // immediately calls app
 
 
 const PORT = process.env.PORT || 5000;
