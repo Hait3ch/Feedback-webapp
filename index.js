@@ -4,8 +4,6 @@ const keys = require('./config/keys');
 
 require('./services/passport');
 
-//mongoose.connect('mongodb+srv://hai:Monopola022!@realmcluster.pbc0n.mongodb.net/feedback-dev?retryWrites=true&w=majority', { useNewUrlParser: true });
-
 const MongoClient = require('mongodb').MongoClient;
 const uri = keys.mongoURI;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
